@@ -8,17 +8,22 @@
 
 *The paper is still under review and available at [OpenReview](https://openreview.net/forum?id=WCVjhq8I2M6).
 
-## Requirements
+## Dependencies
 
-We use the open-source 3D modeling software Blender for dataset generation. If you need to generate more data, install Blender before proceeding to next step.
+Tested with [Blender 2.93.6](https://git.blender.org/gitweb/gitweb.cgi/blender.git/commit/c842a90e2fa1a39da8f28004f17f2931f4dde506) and Python 3.10 with the following libraries:
 
-- `opencv-python>=4.5.4.60`
-- `numpy>=1.22.3`
-- `torch>=1.11.0`
+- `opencv-python==4.5.5.64`
+- `numpy==1.22.4`
+
+We [built Blender from source](https://wiki.blender.org/wiki/Building_Blender/Linux/Ubuntu) on Ubuntu 20.04.4 LTS and then installed the Python dependencies in the Python that is bundled inside Blender itself.
+
+```
+$BLENDER_BUILD_LOCATION/bin/2.93.6/python/bin/python3.10 -m pip install opencv-python numpy
+```
 
 ## Data Generation
 
-1. Install Blender 2.9.3 or higher.
+1. Install Blender 2.93.6 or higher.
 
 2. Check that the Blender installation is in the PATH and you are able to run `blender` from the command line.
 
@@ -34,8 +39,6 @@ cd src/
 blender -b -P generate_notex.py --python-use-system-env -- ../models/ --save_path ../out/ --engine CYCLES --use_gpu
 ```
 
-Make sure `opencv-python` and `numpy` are installed in your system Python, or install them directly in the Python bundled with Blender.
-
 ## Data Visualization
 
 To visualize the generated data, run the following command:
@@ -47,5 +50,7 @@ python visualize.py -d ../out/ -b 4
 where `out` is the directory containing data generated in the previous step. This should show you samples of the generated data.
 
 ![Samples](./samples.png)
+
+This script also requires `torch` to be installed.
 
 In the `dataloader.py` script, we define a PyTorch dataset to read the generated RGB-D data. This is used by the visualization script to show the data. The dataset class can also be used for the synthetic dataset we [made available with this paper](https://projects.dfki.uni-kl.de/textureless_object_data/).
