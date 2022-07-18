@@ -8,11 +8,11 @@ import cv2
 import numpy as np
 from torch.utils.data import DataLoader
 
-from dataloader import TLessDataset
+from dataloader import TLessDataset, TransparentDataset
 
 
-def read_dataset(path, b):
-    dataset = TLessDataset(path)
+def read_dataset(path, b, dataset='notex'):
+    dataset = TLessDataset(path) if dataset == 'notex' else TransparentDataset(path)
     print(len(dataset), "samples in dataset.")
 
     return DataLoader(dataset, batch_size=b, shuffle=True)
@@ -47,11 +47,12 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset_dir', '-d', type=str, default='../out')
     parser.add_argument('--batch_size', '-b', type=int, default=4)
+    parser.add_argument('--dataset', '-ds', type=str, default='notex', choices=['notex', 'trans'])
     return parser.parse_args()
 
 
 def main(args):
-    data = read_dataset(args.dataset_dir, args.batch_size)
+    data = read_dataset(args.dataset_dir, args.batch_size, args.dataset)
     for it in data:
         image, label = it
         dmap, nmap, mask = label
